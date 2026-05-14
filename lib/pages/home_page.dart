@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:praktikum4/pages/product_page.dart';
 import 'package:praktikum4/models/product.dart';
 import 'package:praktikum4/Services/api_service.dart';
+import 'package:praktikum4/pages/add_product_page.dart';
 
 class HomeScreen extends StatefulWidget {
   final String username;
@@ -139,16 +140,41 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-
+      
+      // Tombol Tambah Produk
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+
+          final result = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const ProductScreen()),
+            MaterialPageRoute(builder: (context) => const AddProductPage()),
           );
+
+          if (result == true) {
+            _fetchProducts(); 
+          }
         },
+        tooltip: 'Tambah Draft Produk',
         child: const Icon(Icons.add),
-        tooltip: 'Tambah/Submit Produk',
+      ),
+
+      // Tombol Submit
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.send),
+            label: const Text('SUBMIT TUGAS PRAKTIKUM'),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductScreen()), // Ini mengarah ke form Submit Tugas yang pake Github URL
+              );
+            },
+          ),
+        ),
       ),
     );
   }

@@ -8,7 +8,7 @@ class ApiService {
   final String baseUrl = 'https://task.itprojects.web.id/api';
   final storage = const FlutterSecureStorage();
 
-  // 1. Endpoint Login
+  // Endpoint Login
   Future<bool> login(String username, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
@@ -31,7 +31,7 @@ class ApiService {
     return await storage.read(key: 'token');
   }
 
-  // 2. Endpoint Get Products
+  // Endpoint Get Products
   Future<List<Product>> getProducts() async {
     final token = await _getToken();
     final response = await http.get(
@@ -51,7 +51,27 @@ class ApiService {
     }
   }
 
-  // 3. Endpoint Submit
+  // Endpoint Simpan Produk
+  Future<bool> addProduct(String name, int price, String description) async {
+    final token = await _getToken();
+    final response = await http.post(
+      Uri.parse('$baseUrl/products'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'name': name,
+        'price': price,
+        'description': description,
+      }),
+    );
+
+    return response.statusCode == 200 || response.statusCode == 201;
+  }
+
+  // Endpoint Submit
   Future<bool> submitTask(String name, int price, String description, String githubUrl) async {
     final token = await _getToken();
     print ('Token yang digunakan: $token');
